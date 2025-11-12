@@ -16,6 +16,7 @@ import struct
 import argparse
 from pathlib import Path
 from stack_machine import StackMachine
+from banner import show_banner, should_show_banner
 
 
 class Disassembler:
@@ -144,8 +145,15 @@ def main():
                         help='Show instruction addresses as comments')
     parser.add_argument('-v', '--verbose', action='store_true',
                         help='Show verbose comments (address, bytecode hex, opcode hex)')
+    parser.add_argument('--no-banner', action='store_true',
+                        help='Suppress startup banner')
 
     args = parser.parse_args()
+
+    # Show banner only if writing to file or in verbose/addresses mode
+    # (skip banner for simple stdout disassembly to keep output clean)
+    if should_show_banner(args.no_banner) and (args.output or args.verbose or args.addresses):
+        show_banner(tool_name="Disassembler (stackp)")
 
     # Disassemble
     try:

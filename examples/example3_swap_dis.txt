@@ -1,0 +1,9 @@
+# Disassembled from example3_swap.stkm
+# 6 instructions
+
+PUSH 10              # 0: 01 0a 00 00 00 (op=0x01)
+PUSH 20              # 1: 01 14 00 00 00 (op=0x01)
+PRINT                # 2: 09 00 00 00 00 (op=0x09)
+SWAP                 # 3: 08 00 00 00 00 (op=0x08)
+PRINT                # 4: 09 00 00 00 00 (op=0x09)
+HALT                 # 5: ff 00 00 00 00 (op=0xff)

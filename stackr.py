@@ -12,6 +12,7 @@ import sys
 import struct
 import argparse
 from stack_machine import StackMachine
+from banner import show_banner, should_show_banner
 
 
 class Runtime:
@@ -87,8 +88,14 @@ def main():
         description='Stack Machine Runtime - Execute compiled bytecode'
     )
     parser.add_argument('bytecode', help='Compiled bytecode file (.stkm)')
+    parser.add_argument('--no-banner', action='store_true',
+                        help='Suppress startup banner')
 
     args = parser.parse_args()
+
+    # Show banner unless suppressed
+    if should_show_banner(args.no_banner):
+        show_banner(tool_name="Runtime (stackr)")
 
     # Execute
     try:

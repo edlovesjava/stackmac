@@ -14,6 +14,7 @@ import struct
 import argparse
 from pathlib import Path
 from stack_machine import ProgramParser, StackMachine
+from banner import show_banner, should_show_banner
 
 
 class Compiler:
@@ -72,8 +73,14 @@ def main():
     )
     parser.add_argument('source', help='Source file to compile (.txt)')
     parser.add_argument('-o', '--output', help='Output file (default: source.stkm)')
+    parser.add_argument('--no-banner', action='store_true',
+                        help='Suppress startup banner')
 
     args = parser.parse_args()
+
+    # Show banner unless suppressed
+    if should_show_banner(args.no_banner):
+        show_banner(tool_name="Compiler (stackc)")
 
     # Determine output filename
     if args.output:

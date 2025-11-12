@@ -10,6 +10,8 @@ ENV/
 
 # Compiled bytecode files
 *.stkm
+# But allow example bytecode files
+!examples/*.stkm
 
 # Editor/IDE
 .vscode/
@@ -29,6 +31,9 @@ Thumbs.db
 # Test/temporary files
 *_dis.txt
 *_dis2.txt
+# But allow example disassembly files
+!examples/*_dis.txt
+!examples/*_dis2.txt
 
 # Test coverage
 .coverage

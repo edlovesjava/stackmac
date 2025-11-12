@@ -195,7 +195,7 @@ Binary format:
 
 Calculate `(5 + 3) * 2 = 16`
 
-**Source** (`example1_arithmetic.txt`):
+**Source** (`examples/example1_arithmetic.txt`):
 ```assembly
 # Example 1: Calculate (5 + 3) * 2
 PUSH 5
@@ -209,8 +209,8 @@ HALT
 
 **Compile and run:**
 ```bash
-python stackc.py example1_arithmetic.txt
-python stackr.py example1_arithmetic.stkm
+python stackc.py examples/example1_arithmetic.txt
+python stackr.py examples/example1_arithmetic.stkm
 ```
 
 **Output:**
@@ -223,7 +223,7 @@ Program halted.
 
 Count down from 5 to 1 using loops.
 
-**Source** (`example2_countdown.txt`):
+**Source** (`examples/example2_countdown.txt`):
 ```assembly
 # Example 2: Countdown from 5 to 1
 PUSH 5          # Initialize counter
@@ -256,7 +256,7 @@ Program halted.
 
 Demonstrate stack manipulation.
 
-**Source** (`example3_swap.txt`):
+**Source** (`examples/example3_swap.txt`):
 ```assembly
 # Example 3: Demonstrate SWAP operation
 PUSH 10
@@ -428,10 +428,17 @@ stackmac/
 ├── stackc.py                  # Compiler
 ├── stackr.py                  # Runtime interpreter
 ├── stackp.py                  # Disassembler
-├── example1_arithmetic.txt    # Example: arithmetic
-├── example2_countdown.txt     # Example: loops
-├── example3_swap.txt          # Example: stack ops
-├── example4_extensions.txt    # Example: extension opcodes
+├── banner.py                  # Startup banner utility
+├── examples/                  # Example programs
+│   ├── README.md              # Examples documentation
+│   ├── example1_arithmetic.txt    # Example: arithmetic
+│   ├── example1_arithmetic.stkm   # Compiled bytecode
+│   ├── example2_countdown.txt     # Example: loops
+│   ├── example2_countdown.stkm    # Compiled bytecode
+│   ├── example3_swap.txt          # Example: stack ops
+│   ├── example3_swap.stkm         # Compiled bytecode
+│   ├── example4_extensions.txt    # Example: extension opcodes
+│   └── example4_extensions.stkm   # Compiled bytecode
 ├── extensions/                # Extension opcodes directory
 │   ├── README.md              # Extension documentation
 │   ├── mod.py                 # MOD opcode (modulo)
@@ -450,6 +457,7 @@ stackmac/
 ├── requirements-dev.txt       # Development dependencies
 ├── pytest.ini                 # Test configuration
 ├── .gitignore                 # Git ignore patterns
+├── CLAUDE.md                  # Claude Code guidance
 └── README.md                  # This file
 ```
 
