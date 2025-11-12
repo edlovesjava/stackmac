@@ -14,7 +14,10 @@ class TestProgramParser:
         """Create a temporary file for testing."""
         fd, path = tempfile.mkstemp(suffix='.txt')
         yield fd, path
-        os.close(fd)
+        try:
+            os.close(fd)
+        except OSError:
+            pass  # Already closed
         if os.path.exists(path):
             os.unlink(path)
 

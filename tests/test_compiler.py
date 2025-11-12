@@ -17,7 +17,10 @@ class TestCompiler:
         src_fd, src_path = tempfile.mkstemp(suffix='.txt')
         out_path = src_path.replace('.txt', '.stkm')
         yield src_fd, src_path, out_path
-        os.close(src_fd)
+        try:
+            os.close(src_fd)
+        except OSError:
+            pass  # Already closed
         if os.path.exists(src_path):
             os.unlink(src_path)
         if os.path.exists(out_path):
