@@ -1,0 +1,9 @@
+# Example 3: Demonstrate SWAP operation
+# Shows how SWAP exchanges the top two stack items
+
+PUSH 10
+PUSH 20
+PRINT
+SWAP
+PRINT
+HALT

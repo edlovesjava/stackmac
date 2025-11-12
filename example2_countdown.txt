@@ -1,0 +1,18 @@
+# Example 2: Countdown from 5 to 1
+# This demonstrates loops using JUMP and JZ
+
+# Initialize counter
+PUSH 5
+
+# Loop start (address 1)
+DUP
+PRINT
+PUSH 1
+SUB
+DUP
+JZ 8
+JUMP 1
+
+# End (address 8)
+POP
+HALT

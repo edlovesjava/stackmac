@@ -1,0 +1,10 @@
+# Example 1: Calculate (5 + 3) * 2
+# This demonstrates basic arithmetic operations
+
+PUSH 5
+PUSH 3
+ADD
+PUSH 2
+MUL
+PRINT
+HALT
