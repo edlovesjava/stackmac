@@ -4,7 +4,6 @@ import pytest
 import tempfile
 import os
 import shutil
-from pathlib import Path
 from src.opcodes_ext import OpcodeRegistry
 
 
@@ -66,7 +65,7 @@ def execute(machine, operand):
         """Test extension using reserved opcode value is rejected."""
         self.create_extension(temp_extensions_dir, "TEST", 0x01)  # PUSH value
 
-        registry = OpcodeRegistry(extensions_dir=temp_extensions_dir)
+        OpcodeRegistry(extensions_dir=temp_extensions_dir)
         captured = capsys.readouterr()
 
         assert "reserved opcode value" in captured.err
@@ -77,7 +76,7 @@ def execute(machine, operand):
         with open(filepath, 'w') as f:
             f.write("OPCODE_VALUE = 0x50\n")
 
-        registry = OpcodeRegistry(extensions_dir=temp_extensions_dir)
+        OpcodeRegistry(extensions_dir=temp_extensions_dir)
         captured = capsys.readouterr()
 
         assert "missing OPCODE_NAME" in captured.err
@@ -88,7 +87,7 @@ def execute(machine, operand):
         with open(filepath, 'w') as f:
             f.write('OPCODE_NAME = "TEST"\n')
 
-        registry = OpcodeRegistry(extensions_dir=temp_extensions_dir)
+        OpcodeRegistry(extensions_dir=temp_extensions_dir)
         captured = capsys.readouterr()
 
         assert "missing OPCODE_VALUE" in captured.err
@@ -99,7 +98,7 @@ def execute(machine, operand):
         with open(filepath, 'w') as f:
             f.write('OPCODE_NAME = "TEST"\nOPCODE_VALUE = 0x50\n')
 
-        registry = OpcodeRegistry(extensions_dir=temp_extensions_dir)
+        OpcodeRegistry(extensions_dir=temp_extensions_dir)
         captured = capsys.readouterr()
 
         assert "missing HAS_OPERAND" in captured.err
@@ -110,7 +109,7 @@ def execute(machine, operand):
         with open(filepath, 'w') as f:
             f.write('OPCODE_NAME = "TEST"\nOPCODE_VALUE = 0x50\nHAS_OPERAND = False\n')
 
-        registry = OpcodeRegistry(extensions_dir=temp_extensions_dir)
+        OpcodeRegistry(extensions_dir=temp_extensions_dir)
         captured = capsys.readouterr()
 
         assert "missing execute function" in captured.err
@@ -123,7 +122,7 @@ def execute(machine, operand):
             f.write('OPCODE_NAME = "TEST"\nOPCODE_VALUE = 0x51\nHAS_OPERAND = False\n')
             f.write('def execute(machine, operand):\n    pass\n')
 
-        registry = OpcodeRegistry(extensions_dir=temp_extensions_dir)
+        OpcodeRegistry(extensions_dir=temp_extensions_dir)
         captured = capsys.readouterr()
 
         assert "conflicts with existing opcode" in captured.err
@@ -218,6 +217,6 @@ def execute(machine, operand):
         with open(filepath, 'w') as f:
             f.write('this is not valid python code <<<\n')
 
-        registry = OpcodeRegistry(extensions_dir=temp_extensions_dir)
+        OpcodeRegistry(extensions_dir=temp_extensions_dir)
         captured = capsys.readouterr()
         assert "Error loading extension" in captured.err

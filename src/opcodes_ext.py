@@ -146,6 +146,7 @@ class OpcodeRegistry:
 # Global registry instance
 _registry = None
 
+
 def get_registry():
     """Get the global opcode registry (singleton)."""
     global _registry

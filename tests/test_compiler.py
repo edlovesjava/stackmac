@@ -5,7 +5,6 @@ import tempfile
 import os
 import struct
 from src.stackc import Compiler
-from pathlib import Path
 
 
 class TestCompiler:

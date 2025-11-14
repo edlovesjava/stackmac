@@ -18,6 +18,16 @@ BANNER_COMPACT = r"""
   └──────────────────────────────────┘
 """
 
+# Alias for default banner
+BANNER = BANNER_COMPACT
+
+# Minimal banner for constrained environments
+BANNER_MINIMAL = r"""
+  STACK MAC v{version}
+  stackc | stackr | stackp
+"""
+
+
 def show_banner(tool_name=None, file=None):
     """Display the Stack Machine banner.
 

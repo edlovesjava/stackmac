@@ -6,7 +6,6 @@ import os
 from src.stackc import Compiler
 from src.stackr import Runtime
 from src.stackp import Disassembler
-from pathlib import Path
 
 
 class TestIntegration:

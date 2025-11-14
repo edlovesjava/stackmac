@@ -14,7 +14,6 @@ Usage:
 import sys
 import struct
 import argparse
-from pathlib import Path
 try:
     from .stack_machine import StackMachine
     from .banner import show_banner, should_show_banner

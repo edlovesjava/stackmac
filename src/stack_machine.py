@@ -181,15 +181,15 @@ class StackMachine:
             instruction = f"{opcode} {operand}"
         else:
             instruction = opcode
-        
+
         # Format stack (top 10 items, top on right)
         stack_items = self.stack.items
         stack_display = stack_items[-10:] if self.stack.size() > 10 else stack_items
         stack_str = str(stack_display)
-        
+
         # Print trace line
         print(f"PC:{self.pc:3d} {instruction:<12} Stack: {stack_str}")
-        
+
         # Pause for keypress if stepping
         if step:
             try:
