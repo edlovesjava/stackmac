@@ -7,6 +7,7 @@ from src.banner import (
     __version__, show_banner
 )
 
+
 def display_all_banners():
     """Show all banner style options."""
 
@@ -71,6 +72,7 @@ def display_all_banners():
     print()
     print("Example with tool name:")
     show_banner(style="compact", tool_name="Runtime (stackr)")
+
 
 if __name__ == '__main__':
     display_all_banners()
