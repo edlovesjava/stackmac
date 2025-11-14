@@ -145,8 +145,8 @@ class StackMachine:
             self.stack.push(a)
 
         elif opcode == 'PRINT':
-            # Print and pop the top value from the stack
-            value = self.stack.pop()
+            # Print the top value from the stack without popping
+            value = self.stack.peek()
             print(f"Output: {value}")
 
         elif opcode == 'JUMP':
