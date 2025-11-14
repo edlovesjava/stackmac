@@ -68,7 +68,7 @@ class Runtime:
 
         return program
 
-    def run(self, bytecode_file):
+    def run(self, bytecode_file, trace=False, step=False):
         """Load and execute a bytecode file."""
         # Load the program
         program = self.load(bytecode_file)
@@ -78,7 +78,7 @@ class Runtime:
 
         # Load into machine and execute
         self.machine.load_program(program)
-        self.machine.execute()
+        self.machine.execute(trace=trace, step=step)
 
         print("=" * 60)
 
@@ -90,6 +90,10 @@ def main():
     parser.add_argument('bytecode', help='Compiled bytecode file (.stkm)')
     parser.add_argument('--no-banner', action='store_true',
                         help='Suppress startup banner')
+    parser.add_argument('--trace', action='store_true',
+                        help='Show execution trace (PC, instruction, stack)')
+    parser.add_argument('--step', action='store_true',
+                        help='Step through execution (pause after each instruction, implies --trace)')
 
     args = parser.parse_args()
 
@@ -100,7 +104,9 @@ def main():
     # Execute
     try:
         runtime = Runtime()
-        runtime.run(args.bytecode)
+        # If stepping is enabled, automatically enable tracing
+        trace_enabled = args.trace or args.step
+        runtime.run(args.bytecode, trace=trace_enabled, step=args.step)
     except Exception as e:
         print(f"Runtime error: {e}", file=sys.stderr)
         sys.exit(1)

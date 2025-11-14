@@ -1,0 +1,29 @@
+START:
+    PUSH 11 
+    PRINT
+NEXT:
+    PUSH 1 
+    SUB
+    DUP
+    JZ DONE
+    DUP
+    PUSH 10
+MULT:
+    SWAP 
+    PUSH 1 
+    SUB
+    DUP
+    JZ PRINT
+    SWAP
+    PUSH 10 # INC
+    ADD 
+    JUMP MULT
+DONE:
+    POP 
+    HALT
+PRINT:
+    SWAP 
+    PRINT
+    POP
+    POP
+    JUMP NEXT

@@ -78,7 +78,7 @@ class StackMachine:
         self.program = program
         self.pc = 0
 
-    def execute(self):
+    def execute(self, trace=False, step=False):
         """Execute the loaded program."""
         self.running = True
         self.pc = 0
@@ -86,6 +86,10 @@ class StackMachine:
         while self.running and self.pc < len(self.program):
             instruction = self.program[self.pc]
             opcode, operand = instruction
+
+            # Show trace if requested
+            if trace:
+                self.trace_state(opcode, operand, step=step)
 
             # Execute the instruction
             self.execute_instruction(opcode, operand)
@@ -165,6 +169,30 @@ class StackMachine:
     def debug_state(self):
         """Print the current state of the machine."""
         print(f"PC: {self.pc}, Stack: {self.stack}")
+
+    def trace_state(self, opcode, operand, step=False):
+        """Print a one-line trace of the current execution state."""
+        # Format instruction
+        if operand is not None:
+            instruction = f"{opcode} {operand}"
+        else:
+            instruction = opcode
+        
+        # Format stack (top 10 items, top on right)
+        stack_items = self.stack.items
+        stack_display = stack_items[-10:] if self.stack.size() > 10 else stack_items
+        stack_str = str(stack_display)
+        
+        # Print trace line
+        print(f"PC:{self.pc:3d} {instruction:<12} Stack: {stack_str}")
+        
+        # Pause for keypress if stepping
+        if step:
+            try:
+                input("Press Enter to continue (Ctrl+C to exit)...")
+            except KeyboardInterrupt:
+                print("\nExecution interrupted by user")
+                self.running = False
 
 
 class ProgramParser:

@@ -1,0 +1,30 @@
+# Test program with labels - countdown with multiplication
+PUSH 10
+DUP
+PRINT
+
+NEXT:
+PUSH 1
+SUB
+DUP
+JZ DONE
+DUP
+PUSH 1
+
+MULT:
+SUB
+DUP
+JZ PRINT_RESULT
+PUSH 10
+ADD 
+SWAP
+JUMP MULT
+
+PRINT_RESULT:
+POP
+HALT
+
+DONE:
+SWAP
+PRINT
+JUMP NEXT

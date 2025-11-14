@@ -17,6 +17,115 @@ from stack_machine import ProgramParser, StackMachine
 from banner import show_banner, should_show_banner
 
 
+class LabelAwareProgramParser:
+    """Parser for stack machine programs with label support."""
+
+    @staticmethod
+    def parse_file(filename):
+        """Parse a command file with label support and return a program.
+
+        File format:
+        - Lines starting with # are comments
+        - Lines with 'LABEL:' define labels
+        - Other lines are commands in the format: OPCODE [operand]
+        - JUMP and JZ can use label names instead of addresses
+        - Blank lines are ignored
+
+        Example:
+            # This is a comment
+            PUSH 5
+            LOOP:
+            DUP
+            PRINT
+            PUSH 1
+            SUB
+            DUP
+            JZ END
+            JUMP LOOP
+            END:
+            HALT
+        """
+        # First pass: collect labels and build symbol table
+        labels = {}
+        raw_lines = []
+        address = 0
+
+        try:
+            with open(filename, 'r') as f:
+                for line_num, line in enumerate(f, 1):
+                    original_line = line
+                    line = line.strip()
+
+                    # Skip empty lines and comments
+                    if not line or line.startswith('#'):
+                        raw_lines.append((line_num, original_line, None, None))
+                        continue
+
+                    # Remove inline comments (anything after #)
+                    if '#' in line:
+                        line = line[:line.index('#')].strip()
+
+                    # Check for labels (LABEL:)
+                    if ':' in line and line.endswith(':'):
+                        label_name = line[:-1].strip()
+                        if not label_name:
+                            raise ValueError(f"Line {line_num}: Empty label name")
+                        if label_name in labels:
+                            raise ValueError(f"Line {line_num}: Duplicate label '{label_name}'")
+                        labels[label_name] = address
+                        raw_lines.append((line_num, original_line, 'LABEL', label_name))
+                        # Labels don't consume addresses
+                        continue
+
+                    # Parse command
+                    parts = line.split(None, 1)  # Split on whitespace, max 2 parts
+                    if not parts:
+                        raw_lines.append((line_num, original_line, None, None))
+                        continue
+
+                    opcode = parts[0].upper()
+
+                    # Validate opcode
+                    if opcode not in StackMachine.OPCODES:
+                        raise ValueError(f"Line {line_num}: Unknown opcode '{opcode}'")
+
+                    # Store raw operand (could be label or number)
+                    operand_raw = None
+                    if len(parts) == 2:
+                        operand_raw = parts[1].strip()
+
+                    raw_lines.append((line_num, original_line, opcode, operand_raw))
+                    address += 1
+
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Command file '{filename}' not found")
+
+        # Second pass: resolve labels and build program
+        program = []
+        for line_num, original_line, opcode, operand_raw in raw_lines:
+            if opcode is None or opcode == 'LABEL':
+                continue
+
+            operand = None
+            if operand_raw is not None:
+                # Check if operand is a label reference for JUMP/JZ
+                if opcode in ['JUMP', 'JZ'] and not operand_raw.lstrip('-').isdigit():
+                    # It's a label reference
+                    if operand_raw not in labels:
+                        raise ValueError(f"Line {line_num}: Undefined label '{operand_raw}'")
+                    operand = labels[operand_raw]
+                else:
+                    # It's a number
+                    try:
+                        operand = int(operand_raw)
+                    except ValueError:
+                        raise ValueError(f"Line {line_num}: Invalid operand '{operand_raw}' - must be an integer or label")
+
+            program.append((opcode, operand))
+
+        return program
+
+
 class Compiler:
     """Compiles stack machine source code into bytecode."""
 
@@ -40,8 +149,8 @@ class Compiler:
           - Opcode: 1 byte
           - Operand: 4 bytes (signed int32, little-endian)
         """
-        # Parse the source file
-        parser = ProgramParser()
+        # Parse the source file with label support
+        parser = LabelAwareProgramParser()
         program = parser.parse_file(source_file)
 
         # Open output file for binary writing

@@ -1,0 +1,15 @@
+# Simple label test - countdown from 5 to 1
+PUSH 5
+
+LOOP:
+DUP
+PRINT
+PUSH 1
+SUB
+DUP
+JZ END
+JUMP LOOP
+
+END:
+POP
+HALT
