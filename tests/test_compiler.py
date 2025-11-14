@@ -4,7 +4,7 @@ import pytest
 import tempfile
 import os
 import struct
-from stackc import Compiler
+from src.stackc import Compiler
 from pathlib import Path
 
 

@@ -55,8 +55,8 @@ Compiles source files (`.txt`) into binary bytecode files (`.stkm`).
 
 **Usage:**
 ```bash
-python stackc.py source.txt              # Creates source.stkm
-python stackc.py source.txt -o out.stkm  # Custom output file
+./stackc source.txt              # Creates source.stkm
+./stackc source.txt -o out.stkm  # Custom output file
 ```
 
 ### stackr - Runtime
@@ -65,7 +65,9 @@ Executes compiled bytecode files.
 
 **Usage:**
 ```bash
-python stackr.py program.stkm
+./stackr program.stkm
+./stackr program.stkm --trace      # Show execution trace
+./stackr program.stkm --step       # Interactive step debugging
 ```
 
 ### stackp - Disassembler
@@ -74,10 +76,10 @@ Converts bytecode back to readable source code.
 
 **Usage:**
 ```bash
-python stackp.py program.stkm                # Print to stdout
-python stackp.py program.stkm -o out.txt     # Save to file
-python stackp.py program.stkm -a             # Show addresses
-python stackp.py program.stkm -v             # Verbose mode (hex dump)
+./stackp program.stkm                # Print to stdout
+./stackp program.stkm -o out.txt     # Save to file
+./stackp program.stkm -a             # Show addresses
+./stackp program.stkm -v             # Verbose mode (hex dump)
 ```
 
 **Verbose mode** shows file byte offset, raw bytecode in hex (all 5 bytes), and opcode hex:
@@ -99,7 +101,7 @@ ADD                  # @0x0013: 03 00 00 00 00 (op=0x03)
 | DIV    | 0x06 | -       | Pop b, pop a, push a/b (integer division) |
 | DUP    | 0x07 | -       | Duplicate the top stack value |
 | SWAP   | 0x08 | -       | Swap the top two stack values |
-| PRINT  | 0x09 | -       | Print the top value (without popping) |
+| PRINT  | 0x09 | -       | Print and pop the top value |
 | JUMP   | 0x0A | address | Unconditional jump to address |
 | JZ     | 0x0B | address | Pop value, jump to address if zero |
 | HALT   | 0xFF | -       | Stop program execution |
@@ -348,15 +350,15 @@ All tests validate:
 ### Installation
 
 1. Clone or download this repository
-2. (Optional) Create a virtual environment:
+2. Run the setup script to create virtual environment:
    ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ./setup
    ```
-3. (Optional) Install development dependencies:
-   ```bash
-   pip install -r requirements-dev.txt
-   ```
+
+This will:
+- Create a Python virtual environment
+- Install development dependencies
+- Set up the project for development
 
 ### Quick Start
 
@@ -371,17 +373,17 @@ All tests validate:
 
 2. **Compile it:**
    ```bash
-   python stackc.py hello.txt
+   ./stackc hello.txt
    ```
 
 3. **Run it:**
    ```bash
-   python stackr.py hello.stkm
+   ./stackr hello.stkm
    ```
 
 4. **Disassemble it:**
    ```bash
-   python stackp.py hello.stkm -v
+   ./stackp hello.stkm -v
    ```
 
 ## Development Workflow
@@ -423,12 +425,17 @@ cmp original.stkm recovered.stkm  # Files are identical!
 
 ```
 stackmac/
-├── stack_machine.py           # Core VM implementation
-├── opcodes_ext.py             # Extension registry system
-├── stackc.py                  # Compiler
-├── stackr.py                  # Runtime interpreter
-├── stackp.py                  # Disassembler
-├── banner.py                  # Startup banner utility
+├── src/                       # Source code directory
+│   ├── stack_machine.py       # Core VM implementation
+│   ├── opcodes_ext.py         # Extension registry system
+│   ├── stackc.py              # Compiler
+│   ├── stackr.py              # Runtime interpreter
+│   ├── stackp.py              # Disassembler
+│   └── banner.py              # Startup banner utility
+├── stackc                     # Compiler shell script
+├── stackr                     # Runtime shell script
+├── stackp                     # Disassembler shell script
+├── setup                      # Setup script for development environment
 ├── examples/                  # Example programs
 │   ├── README.md              # Examples documentation
 │   ├── example1_arithmetic.txt    # Example: arithmetic
@@ -443,6 +450,10 @@ stackmac/
 │   ├── README.md              # Extension documentation
 │   ├── mod.py                 # MOD opcode (modulo)
 │   └── neg.py                 # NEG opcode (negate)
+├── programs/                  # User programs and test programs
+│   ├── test_labels.txt        # Example with labels
+│   ├── mynewprog.txt          # Test program
+│   └── mynewprog_with_labels.txt # Test program with labels
 ├── tests/                     # Comprehensive test suite
 │   ├── conftest.py            # Test configuration and fixtures
 │   ├── test_stack.py          # Stack class tests (15 tests)
@@ -453,7 +464,10 @@ stackmac/
 │   ├── test_disassembler.py   # Disassembler tests (8 tests)
 │   ├── test_opcode_registry.py# Extension system tests (18 tests)
 │   ├── test_extensions.py     # MOD/NEG tests (10 tests)
-│   └── test_integration.py    # Integration tests (7 tests)
+│   ├── test_integration.py    # Integration tests (7 tests)
+│   ├── test_trace.py          # Trace functionality tests
+│   ├── test_banners.py        # Banner tests
+│   └── test_banner_integration.py # Banner integration tests
 ├── requirements-dev.txt       # Development dependencies
 ├── pytest.ini                 # Test configuration
 ├── .gitignore                 # Git ignore patterns

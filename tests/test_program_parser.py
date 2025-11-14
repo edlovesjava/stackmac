@@ -3,7 +3,7 @@
 import pytest
 import tempfile
 import os
-from stack_machine import ProgramParser, StackMachine
+from src.stack_machine import ProgramParser, StackMachine
 
 
 class TestProgramParser:

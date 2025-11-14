@@ -1,0 +1,15 @@
+# Simple countdown with labels
+PUSH 5
+
+LOOP:
+DUP
+PRINT
+PUSH 1
+SUB
+DUP
+JZ DONE
+JUMP LOOP
+
+DONE:
+POP
+HALT

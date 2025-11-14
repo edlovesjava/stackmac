@@ -1,7 +1,7 @@
 """Test suite for StackMachine class."""
 
 import pytest
-from stack_machine import StackMachine
+from src.stack_machine import StackMachine
 
 
 class TestStackMachine:

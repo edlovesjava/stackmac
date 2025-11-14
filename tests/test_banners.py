@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Display all available banner styles for preview."""
 
-from banner import (
+from src.banner import (
     BANNER, BANNER_COMPACT, BANNER_MINIMAL,
     BANNER_ALT1, BANNER_ALT2, BANNER_RETRO,
     __version__, show_banner

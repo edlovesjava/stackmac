@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Stack Machine Setup Script
+# Sets up the development environment
+
+echo "Setting up Stack Machine development environment..."
+echo "=" * 50
+
+# Check if Python 3 is available
+if ! command -v python3 &> /dev/null; then
+    echo "Error: Python 3 is not installed or not in PATH"
+    exit 1
+fi
+
+echo "✓ Python 3 found: $(python3 --version)"
+
+# Create virtual environment if it doesn't exist
+if [ ! -d "venv" ]; then
+    echo "Creating virtual environment..."
+    python3 -m venv venv
+    echo "✓ Virtual environment created"
+else
+    echo "✓ Virtual environment already exists"
+fi
+
+# Activate virtual environment
+echo "Activating virtual environment..."
+source venv/bin/activate
+
+# Install development dependencies
+if [ -f "requirements-dev.txt" ]; then
+    echo "Installing development dependencies..."
+    pip install -r requirements-dev.txt
+    echo "✓ Dependencies installed"
+else
+    echo "⚠ Warning: requirements-dev.txt not found, skipping dependency installation"
+fi
+
+echo ""
+echo "Setup complete! 🎉"
+echo ""
+echo "You can now use the Stack Machine tools:"
+echo "  ./stackc programs/test_labels.txt    # Compile"
+echo "  ./stackr programs/test_labels.stkm   # Run"
+echo "  ./stackp programs/test_labels.stkm   # Disassemble"
+echo ""
+echo "To run tests:"
+echo "  source venv/bin/activate"
+echo "  python3 -m pytest tests/ -v"
+echo ""
+echo "To deactivate the virtual environment when done:"
+echo "  deactivate"

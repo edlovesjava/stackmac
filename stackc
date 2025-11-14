@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Stack Machine Compiler (stackc)
+# Shell script to run the compiler with virtual environment
+
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Check if virtual environment exists
+if [ -d "$SCRIPT_DIR/venv" ]; then
+    # Activate virtual environment
+    source "$SCRIPT_DIR/venv/bin/activate"
+    
+    # Add src directory to PYTHONPATH
+    export PYTHONPATH="$SCRIPT_DIR/src:$PYTHONPATH"
+    
+    # Run the compiler
+    python3 "$SCRIPT_DIR/src/stackc.py" "$@"
+    
+    # Deactivate virtual environment
+    deactivate
+else
+    echo "Error: Virtual environment not found at $SCRIPT_DIR/venv"
+    echo "Please create a virtual environment first:"
+    echo "  python3 -m venv venv"
+    echo "  source venv/bin/activate"
+    echo "  pip install -r requirements-dev.txt"
+    exit 1
+fi

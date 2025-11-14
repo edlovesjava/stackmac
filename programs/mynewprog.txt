@@ -1,5 +1,6 @@
 START:
     PUSH 11 
+    DUP
     PRINT
 NEXT:
     PUSH 1 
@@ -23,6 +24,7 @@ DONE:
     HALT
 PRINT:
     SWAP 
+    DUP
     PRINT
     POP
     POP

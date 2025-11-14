@@ -15,8 +15,12 @@ import sys
 import struct
 import argparse
 from pathlib import Path
-from stack_machine import StackMachine
-from banner import show_banner, should_show_banner
+try:
+    from .stack_machine import StackMachine
+    from .banner import show_banner, should_show_banner
+except ImportError:
+    from stack_machine import StackMachine
+    from banner import show_banner, should_show_banner
 
 
 class Disassembler:

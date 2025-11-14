@@ -202,7 +202,7 @@ python3 ../stackr.py my_program.stkm
 - `DIV` - Integer division (a / b)
 - `DUP` - Duplicate top value
 - `SWAP` - Swap top two values
-- `PRINT` - Print top value (without popping)
+- `PRINT` - Print and pop the top value
 - `JUMP addr` - Jump to instruction address
 - `JZ addr` - Pop value, jump if zero
 - `HALT` - Stop execution

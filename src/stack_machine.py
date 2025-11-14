@@ -11,7 +11,10 @@ This stack machine supports:
 - Extension opcodes: Loaded dynamically from extensions/ directory
 """
 
-from opcodes_ext import get_registry
+try:
+    from .opcodes_ext import get_registry
+except ImportError:
+    from opcodes_ext import get_registry
 
 
 class Stack:
@@ -142,8 +145,9 @@ class StackMachine:
             self.stack.push(a)
 
         elif opcode == 'PRINT':
-            # Print the top of the stack without popping
-            print(f"Output: {self.stack.peek()}")
+            # Print and pop the top value from the stack
+            value = self.stack.pop()
+            print(f"Output: {value}")
 
         elif opcode == 'JUMP':
             # Unconditional jump to address

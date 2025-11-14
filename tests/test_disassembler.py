@@ -4,7 +4,7 @@ import pytest
 import tempfile
 import os
 import struct
-from stackp import Disassembler
+from src.stackp import Disassembler
 
 
 class TestDisassembler:

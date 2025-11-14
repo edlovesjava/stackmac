@@ -4,7 +4,7 @@ Test script to verify the trace functionality works correctly.
 """
 
 import sys
-from stackr import Runtime
+from src.stackr import Runtime
 
 def test_trace():
     """Test the trace functionality with a simple program."""

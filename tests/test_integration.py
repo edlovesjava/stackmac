@@ -3,9 +3,9 @@
 import pytest
 import tempfile
 import os
-from stackc import Compiler
-from stackr import Runtime
-from stackp import Disassembler
+from src.stackc import Compiler
+from src.stackr import Runtime
+from src.stackp import Disassembler
 from pathlib import Path
 
 

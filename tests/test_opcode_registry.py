@@ -5,7 +5,7 @@ import tempfile
 import os
 import shutil
 from pathlib import Path
-from opcodes_ext import OpcodeRegistry
+from src.opcodes_ext import OpcodeRegistry
 
 
 class TestOpcodeRegistry:
@@ -171,7 +171,7 @@ def execute(machine, operand):
         registry = OpcodeRegistry(extensions_dir=temp_extensions_dir)
 
         # Create mock machine
-        from stack_machine import StackMachine
+        from src.stack_machine import StackMachine
         machine = StackMachine()
         machine.stack.push(5)
 
@@ -181,7 +181,7 @@ def execute(machine, operand):
     def test_execute_unknown_extension_raises_error(self):
         """Test executing unknown extension raises error."""
         registry = OpcodeRegistry(extensions_dir='nonexistent')
-        from stack_machine import StackMachine
+        from src.stack_machine import StackMachine
         machine = StackMachine()
 
         with pytest.raises(ValueError, match="Unknown extension opcode"):

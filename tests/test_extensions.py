@@ -1,7 +1,7 @@
-"""Tests for extension opcodes (MOD and NEG)."""
+"""Test suite for extension opcodes (MOD and NEG)."""
 
 import pytest
-from stack_machine import StackMachine
+from src.stack_machine import StackMachine
 
 
 class TestMODExtension:

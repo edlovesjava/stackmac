@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Test banner integration."""
 
-from banner import show_banner, should_show_banner
+from src.banner import show_banner, should_show_banner
 
 print("=" * 60)
 print("TEST 1: Show banner with tool name")

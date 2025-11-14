@@ -4,7 +4,7 @@ import pytest
 import tempfile
 import os
 import struct
-from stackr import Runtime
+from src.stackr import Runtime
 
 
 class TestRuntime:
