@@ -91,7 +91,13 @@ class LabelAwareProgramParser:
 
                     # Validate opcode
                     if opcode not in StackMachine.OPCODES:
-                        raise ValueError(f"Line {line_num}: Unknown opcode '{opcode}'")
+                        # Try to suggest similar opcodes
+                        import difflib
+                        suggestions = difflib.get_close_matches(opcode, StackMachine.OPCODES.keys(), n=3, cutoff=0.6)
+                        msg = f"Line {line_num}: Unknown opcode '{opcode}'"
+                        if suggestions:
+                            msg += f" (did you mean {', '.join(suggestions)}?)"
+                        raise ValueError(msg)
 
                     # Store raw operand (could be label or number)
                     operand_raw = None
@@ -134,8 +140,10 @@ class Compiler:
     """Compiles stack machine source code into bytecode."""
 
     # File format constants
-    MAGIC = b'STKM'  # Magic number to identify stack machine files
-    VERSION = 1       # File format version
+    MAGIC = b'STKM'      # Magic number to identify stack machine files
+    VERSION = 1          # File format version
+    HEADER_SIZE = 9      # Magic(4) + Version(1) + Count(4)
+    INSTRUCTION_SIZE = 5 # Opcode(1) + Operand(4)
 
     def __init__(self):
         # Initialize opcodes from registry (includes extensions)

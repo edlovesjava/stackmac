@@ -177,7 +177,7 @@ class TestStackMachine:
         machine.execute_instruction('PRINT', None)
         captured = capsys.readouterr()
         assert "Output: 42" in captured.out
-        assert machine.stack.peek() == 42  # Should not pop
+        assert machine.stack.is_empty()  # PRINT pops the value
 
     def test_print_empty_stack_raises_error(self):
         """Test PRINT on empty stack raises error."""

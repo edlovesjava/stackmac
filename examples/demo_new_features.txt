@@ -1,0 +1,57 @@
+# Demo of new features added to Stack Machine
+# - Comparison opcodes: EQ, NEQ, LT, GT, LTE, GTE
+# - Stack introspection: DEPTH, OVER, ROT
+# - Instruction cost tracking (use --trace to see)
+
+# Test 1: Comparison opcodes (EQ)
+PUSH 5
+PUSH 5
+EQ         # Should push 1 (true)
+PRINT      # Output: 1
+
+# Test 2: Not equal (NEQ)
+PUSH 10
+PUSH 20
+NEQ        # Should push 1 (true, 10 != 20)
+PRINT      # Output: 1
+
+# Test 3: Less than (LT)
+PUSH 3
+PUSH 7
+LT         # Should push 1 (true, 3 < 7)
+PRINT      # Output: 1
+
+# Test 4: Greater than (GT)
+PUSH 15
+PUSH 10
+GT         # Should push 1 (true, 15 > 10)
+PRINT      # Output: 1
+
+# Test 5: Stack depth
+PUSH 100
+PUSH 200
+PUSH 300
+DEPTH      # Should push 3 (three items on stack)
+PRINT      # Output: 3 (PRINT pops the depth value)
+POP        # Clean up 300
+POP        # Clean up 200
+POP        # Clean up 100
+
+# Test 6: OVER (copy second item)
+PUSH 42
+PUSH 99
+OVER       # Stack: [42, 99, 42]
+PRINT      # Output: 42 (pops 42, leaves [42, 99])
+PRINT      # Output: 99 (pops 99, leaves [42])
+POP        # Clean up last 42
+
+# Test 7: ROT (rotate top 3)
+PUSH 1
+PUSH 2
+PUSH 3
+ROT        # [1 2 3] -> [2 3 1]
+PRINT      # Output: 1
+PRINT      # Output: 3
+PRINT      # Output: 2
+
+HALT

@@ -11,6 +11,8 @@ This stack machine supports:
 - Extension opcodes: Loaded dynamically from extensions/ directory
 """
 
+from typing import List, Tuple, Optional, Dict
+
 try:
     from .opcodes_ext import get_registry
 except ImportError:
@@ -20,59 +22,76 @@ except ImportError:
 class Stack:
     """A simple stack data structure for the stack machine."""
 
-    def __init__(self):
-        self.items = []
+    def __init__(self) -> None:
+        self.items: List[int] = []
 
-    def push(self, item):
+    def push(self, item: int) -> None:
         """Push an item onto the stack."""
         self.items.append(item)
 
-    def pop(self):
+    def pop(self) -> int:
         """Pop an item from the stack."""
         if self.is_empty():
             raise IndexError("Stack underflow: cannot pop from empty stack")
         return self.items.pop()
 
-    def peek(self):
+    def peek(self) -> int:
         """Look at the top item without removing it."""
         if self.is_empty():
             raise IndexError("Stack is empty")
         return self.items[-1]
 
-    def is_empty(self):
+    def is_empty(self) -> bool:
         """Check if the stack is empty."""
         return len(self.items) == 0
 
-    def size(self):
+    def size(self) -> int:
         """Return the number of items in the stack."""
         return len(self.items)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Stack({self.items})"
 
 
 class StackMachine:
     """A simple stack-based virtual machine."""
 
+    # Constants
+    PC_JUMP_OFFSET = 1  # Adjustment for post-increment after jump
+    TRACE_STACK_LIMIT = 10  # Max stack items to display in trace
+
+    # Instruction costs (for educational purposes - simulated cycles)
+    INSTRUCTION_COSTS: Dict[str, int] = {
+        'PUSH': 1, 'POP': 1, 'DUP': 1, 'SWAP': 1,
+        'ADD': 1, 'SUB': 1,
+        'MUL': 3,  # Multiplication is more expensive
+        'DIV': 10,  # Division is most expensive
+        'JUMP': 2, 'JZ': 2,  # Control flow has overhead
+        'PRINT': 5,  # I/O is expensive
+        'HALT': 1,
+    }
+
     # Opcode definitions (loaded from registry to include extensions)
-    OPCODES = None  # Will be initialized from registry
+    OPCODES: Optional[Dict[str, int]] = None  # Will be initialized from registry
 
     @classmethod
-    def _init_opcodes(cls):
+    def _init_opcodes(cls) -> None:
         """Initialize opcodes from registry (includes extensions)."""
         if cls.OPCODES is None:
             registry = get_registry()
             cls.OPCODES = registry.get_opcodes()
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._init_opcodes()
-        self.stack = Stack()
-        self.program = []
-        self.pc = 0  # Program counter
-        self.running = False
+        self.stack: Stack = Stack()
+        self.program: List[Tuple[str, Optional[int]]] = []
+        self.pc: int = 0  # Program counter
+        self.running: bool = False
         self.registry = get_registry()
+        self.instruction_count: int = 0  # Total instructions executed
+        self.cycle_count: int = 0  # Total cycles (weighted by cost)
 
-    def load_program(self, program):
+    def load_program(self, program: List[Tuple[str, Optional[int]]]) -> None:
         """Load a program into memory.
 
         Program format: list of tuples (opcode, operand)
@@ -81,10 +100,12 @@ class StackMachine:
         self.program = program
         self.pc = 0
 
-    def execute(self, trace=False, step=False):
+    def execute(self, trace: bool = False, step: bool = False) -> None:
         """Execute the loaded program."""
         self.running = True
         self.pc = 0
+        self.instruction_count = 0
+        self.cycle_count = 0
 
         while self.running and self.pc < len(self.program):
             instruction = self.program[self.pc]
@@ -101,8 +122,12 @@ class StackMachine:
             if self.running:
                 self.pc += 1
 
-    def execute_instruction(self, opcode, operand):
+    def execute_instruction(self, opcode: str, operand: Optional[int]) -> None:
         """Execute a single instruction."""
+
+        # Track instruction execution
+        self.instruction_count += 1
+        self.cycle_count += self.get_instruction_cost(opcode)
 
         if opcode == 'PUSH':
             self.stack.push(operand)
@@ -151,13 +176,13 @@ class StackMachine:
 
         elif opcode == 'JUMP':
             # Unconditional jump to address
-            self.pc = operand - 1  # -1 because pc will be incremented
+            self.pc = operand - self.PC_JUMP_OFFSET  # Adjust for post-increment
 
         elif opcode == 'JZ':
             # Jump if top of stack is zero
             value = self.stack.pop()
             if value == 0:
-                self.pc = operand - 1
+                self.pc = operand - self.PC_JUMP_OFFSET
 
         elif opcode == 'HALT':
             self.running = False
@@ -168,13 +193,64 @@ class StackMachine:
             if self.registry.is_extension(opcode):
                 self.registry.execute_extension(opcode, self, operand)
             else:
-                raise ValueError(f"Unknown opcode: {opcode}")
+                # Try to suggest similar opcodes
+                suggestions = self._find_similar_opcodes(opcode)
+                msg = f"Unknown opcode: {opcode}"
+                if suggestions:
+                    msg += f" (did you mean {', '.join(suggestions)}?)"
+                raise ValueError(msg)
 
-    def debug_state(self):
+    def debug_state(self) -> None:
         """Print the current state of the machine."""
         print(f"PC: {self.pc}, Stack: {self.stack}")
 
-    def trace_state(self, opcode, operand, step=False):
+    def get_instruction_cost(self, opcode: str) -> int:
+        """Get the cycle cost of an instruction (for educational purposes).
+
+        Args:
+            opcode: The opcode name
+
+        Returns:
+            Number of simulated cycles for this instruction
+        """
+        # Check known costs first
+        if opcode in self.INSTRUCTION_COSTS:
+            return self.INSTRUCTION_COSTS[opcode]
+
+        # Extension opcodes have default cost of 1
+        if self.registry.is_extension(opcode):
+            return 1
+
+        # Unknown opcodes default to 1
+        return 1
+
+    def get_stats(self) -> Dict[str, int]:
+        """Get execution statistics.
+
+        Returns:
+            Dictionary with 'instructions' and 'cycles' counts
+        """
+        return {
+            'instructions': self.instruction_count,
+            'cycles': self.cycle_count
+        }
+
+    def _find_similar_opcodes(self, opcode: str, threshold: float = 0.6) -> List[str]:
+        """Find similar opcode names using fuzzy matching.
+
+        Args:
+            opcode: The unknown opcode to find matches for
+            threshold: Similarity threshold (0.0-1.0)
+
+        Returns:
+            List of up to 3 similar opcode names
+        """
+        import difflib
+        if self.OPCODES is None:
+            return []
+        return difflib.get_close_matches(opcode, self.OPCODES.keys(), n=3, cutoff=threshold)
+
+    def trace_state(self, opcode: str, operand: Optional[int], step: bool = False) -> None:
         """Print a one-line trace of the current execution state."""
         # Format instruction
         if operand is not None:
@@ -182,9 +258,12 @@ class StackMachine:
         else:
             instruction = opcode
         
-        # Format stack (top 10 items, top on right)
+        # Format stack (top N items, top on right)
         stack_items = self.stack.items
-        stack_display = stack_items[-10:] if self.stack.size() > 10 else stack_items
+        if self.stack.size() > self.TRACE_STACK_LIMIT:
+            stack_display = stack_items[-self.TRACE_STACK_LIMIT:]
+        else:
+            stack_display = stack_items
         stack_str = str(stack_display)
         
         # Print trace line
@@ -203,7 +282,7 @@ class ProgramParser:
     """Parser for stack machine programs from text files."""
 
     @staticmethod
-    def parse_file(filename):
+    def parse_file(filename: str) -> List[Tuple[str, Optional[int]]]:
         """Parse a command file and return a program.
 
         File format:
@@ -243,7 +322,13 @@ class ProgramParser:
 
                     # Validate opcode
                     if opcode not in StackMachine.OPCODES:
-                        raise ValueError(f"Line {line_num}: Unknown opcode '{opcode}'")
+                        # Try to suggest similar opcodes
+                        import difflib
+                        suggestions = difflib.get_close_matches(opcode, StackMachine.OPCODES.keys(), n=3, cutoff=0.6)
+                        msg = f"Line {line_num}: Unknown opcode '{opcode}'"
+                        if suggestions:
+                            msg += f" (did you mean {', '.join(suggestions)}?)"
+                        raise ValueError(msg)
 
                     # Parse operand if present
                     operand = None

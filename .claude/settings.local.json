@@ -14,7 +14,9 @@
       "Bash(pip install:*)",
       "Bash(~/.local/bin/pytest -v)",
       "Bash(~/.local/bin/pytest:*)",
-      "Bash(bash:*)"
+      "Bash(bash:*)",
+      "Bash(tree:*)",
+      "Bash(pytest:*)"
     ],
     "deny": [],
     "ask": []

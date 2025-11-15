@@ -2,7 +2,7 @@
 """Display all available banner styles for preview."""
 
 from src.banner import (
-    BANNER, BANNER_COMPACT, BANNER_MINIMAL,
+    BANNER_COMPACT,
     BANNER_ALT1, BANNER_ALT2, BANNER_RETRO,
     __version__, show_banner
 )
@@ -15,32 +15,22 @@ def display_all_banners():
     print("=" * 60)
     print()
 
-    print("OPTION 1: FULL (Default Large)")
-    print("-" * 60)
-    print(BANNER.format(version=__version__))
-    print()
-
-    print("OPTION 2: COMPACT (Recommended Default)")
+    print("OPTION 1: COMPACT (Default)")
     print("-" * 60)
     print(BANNER_COMPACT.format(version=__version__))
     print()
 
-    print("OPTION 3: MINIMAL")
-    print("-" * 60)
-    print(BANNER_MINIMAL.format(version=__version__))
-    print()
-
-    print("OPTION 4: ALTERNATIVE 1 (Block Letters)")
+    print("OPTION 2: ALTERNATIVE 1 (Block Letters)")
     print("-" * 60)
     print(BANNER_ALT1.format(version=__version__))
     print()
 
-    print("OPTION 5: ALTERNATIVE 2 (Compact with Stack)")
+    print("OPTION 3: ALTERNATIVE 2 (Compact with Stack)")
     print("-" * 60)
     print(BANNER_ALT2.format(version=__version__))
     print()
 
-    print("OPTION 6: RETRO (ASCII Blocks)")
+    print("OPTION 4: RETRO (ASCII Blocks)")
     print("-" * 60)
     print(BANNER_RETRO.format(version=__version__))
     print()
