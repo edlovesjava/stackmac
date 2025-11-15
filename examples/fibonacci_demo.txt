@@ -1,0 +1,45 @@
+# Fibonacci Demo - First 8 numbers with detailed comments
+# Shows how ROT, DUP, and ADD work together
+
+PUSH 0
+PRINT            # F(0) = 0
+
+PUSH 1
+PRINT            # F(1) = 1
+
+# Initialize loop: counter=6, a=0, b=1
+PUSH 6
+PUSH 0
+PUSH 1
+
+LOOP:
+  # Stack: [counter, a, b]
+  # Goal: print (a+b) and update to [counter-1, b, a+b]
+
+  DUP            # Duplicate b: [counter, a, b, b]
+  ROT            # Rotate to get a: [counter, b, b, a]
+  ADD            # Add them: [counter, b, next]
+  DUP            # Duplicate for printing: [counter, b, next, next]
+  PRINT          # Print and pop: [counter, b, next]
+
+  # Decrement counter and check
+  ROT            # [b, next, counter]
+  PUSH 1
+  SUB            # [b, next, counter-1]
+  DUP
+  PUSH 0
+  GT             # Is counter-1 > 0?
+  JZ END
+
+  # Rearrange stack for next iteration
+  SWAP           # [b, counter-1, next]
+  ROT            # [counter-1, next, b]
+  SWAP           # [counter-1, b, next]
+
+  JUMP LOOP
+
+END:
+  POP
+  POP
+  POP
+  HALT

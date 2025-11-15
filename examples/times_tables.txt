@@ -1,0 +1,46 @@
+# Times Tables from 1 to 10
+# Prints products of i * j for i=1..10, j=1..10
+# This is a nested loop implementation using the new comparison opcodes
+
+# Outer loop: i from 1 to 10
+PUSH 1           # i = 1
+
+OUTER_START:
+  # Check if i <= 10
+  DUP            # Duplicate i for comparison
+  PUSH 10
+  LTE            # Push 1 if i <= 10, else 0
+  JZ OUTER_END   # If 0 (i > 10), exit outer loop
+
+  # Inner loop: j from 1 to 10
+  PUSH 1         # j = 1
+
+INNER_START:
+  # Check if j <= 10
+  DUP            # Duplicate j for comparison
+  PUSH 10
+  LTE            # Push 1 if j <= 10, else 0
+  JZ INNER_END   # If 0 (j > 10), exit inner loop
+
+  # Calculate i * j and print the result
+  OVER           # Copy i to top: [i, j, i]
+  OVER           # Copy j to top: [i, j, i, j]
+  MUL            # Multiply: [i, j, i*j]
+  PRINT          # Print result and pop: [i, j]
+
+  # Increment j
+  PUSH 1
+  ADD            # j = j + 1
+  JUMP INNER_START
+
+INNER_END:
+  POP            # Remove j from stack
+
+  # Increment i
+  PUSH 1
+  ADD            # i = i + 1
+  JUMP OUTER_START
+
+OUTER_END:
+  POP            # Clean up i
+  HALT

@@ -1,0 +1,43 @@
+# Times Tables Demo - First 3×3 to see the execution
+# This shows how the nested loops work with the new comparison opcodes
+
+PUSH 1           # i = 1
+
+OUTER_START:
+  # Check if i <= 3 (limited for demo)
+  DUP
+  PUSH 3         # Demo: only go to 3 instead of 10
+  LTE
+  JZ OUTER_END
+
+  PUSH 1         # j = 1
+
+INNER_START:
+  # Check if j <= 3 (limited for demo)
+  DUP
+  PUSH 3         # Demo: only go to 3 instead of 10
+  LTE
+  JZ INNER_END
+
+  # Calculate and print i * j
+  OVER           # Copy i
+  OVER           # Copy j
+  MUL            # Multiply
+  PRINT          # Print result
+
+  # Increment j
+  PUSH 1
+  ADD
+  JUMP INNER_START
+
+INNER_END:
+  POP            # Remove j
+
+  # Increment i
+  PUSH 1
+  ADD
+  JUMP OUTER_START
+
+OUTER_END:
+  POP
+  HALT
