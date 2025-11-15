@@ -54,4 +54,9 @@ PRINT      # Output: 1
 PRINT      # Output: 3
 PRINT      # Output: 2
 
+# Test 8: PEEK (print the top in stack without changing the stack)
+PUSH 888
+PEEK
+PRINT
+
 HALT
